@@ -1,5 +1,18 @@
 <template>
-  <div>1</div>
+  <div>
+    <el-upload
+      class="upload-demo"
+      ref="upload"
+      action="/api/ManageSystem/Upload"
+      :on-preview="handlePreview"
+      :on-remove="handleRemove"
+      :file-list="fileList"
+      :auto-upload="false"
+    >
+      <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+      <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
+    </el-upload>
+  </div>
 </template>
 
 <script>
@@ -7,9 +20,32 @@ export default {
   name: "front",
   components: {},
   data() {
-    return {};
+    return {
+      fileList: []
+    };
   },
-  methods: {}
+  methods: {
+    submitUpload() {
+      this.$refs.upload.submit();
+    },
+    handleRemove(file, fileList) {
+      console.log(file, fileList);
+    },
+    handlePreview(file) {
+      console.log(file);
+    },
+    async getInitData() {
+      let params = {};
+      let res = await window.axios.post(
+        "/api/ManageSystem/GetInitData",
+        params
+      );
+      console.log("res:", res);
+    }
+  },
+  created() {
+    setInterval(this.getInitData, 5000);
+  }
 };
 </script>
 <style lang="scss">
