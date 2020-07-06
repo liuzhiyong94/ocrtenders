@@ -67,21 +67,39 @@
                 </el-upload>
             </el-col>
         </el-row>
-        <el-input
-            type="textarea"
-            :autosize="{ minRows: 4, maxRows: 30}"
-            placeholder="请输入内容"
-            v-model="jsonstr"
-            style="margin:20px;width:50%;"
-        ></el-input>
-        <div>
-            <el-button
-                style="margin-left: 10px;"
-                size="small"
-                type="success"
-                @click="ModifyJsonStr"
-            >修改提交</el-button>
-        </div>
+        <el-row>
+            <el-col :span="12">
+                <el-select v-model="xuhao" placeholder="请选择序号" style="margin:20px;">
+                    <el-option
+                        v-for="item in options"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"
+                    ></el-option>
+                </el-select>
+                <!-- <el-button style="margin-left: 10px;" size="small" type="success" @click="GetXuhaoSrc">获取图片</el-button> -->
+                <div>
+                    <el-image :src="xuhaosrc" v-if="xuhaosrc"></el-image>
+                </div>
+            </el-col>
+            <el-col :span="12">
+                <el-input
+                    type="textarea"
+                    :autosize="{ minRows: 4, maxRows: 30}"
+                    placeholder="请输入内容"
+                    v-model="jsonstr"
+                    style="margin:20px;width:90%;"
+                ></el-input>
+                <div>
+                    <el-button
+                        style="margin-left: 10px;"
+                        size="small"
+                        type="success"
+                        @click="ModifyJsonStr"
+                    >修改提交</el-button>
+                </div>
+            </el-col>
+        </el-row>
     </div>
 </template>
 
@@ -95,7 +113,67 @@ export default {
             jsonstr: "",
             srcList: [],
             imageurl: "",
-            jsonname: ""
+            jsonname: "",
+            options: [
+                {
+                    value: "1",
+                    label: "序号1"
+                },
+                {
+                    value: "2",
+                    label: "序号2"
+                },
+                {
+                    value: "3",
+                    label: "序号3"
+                },
+                {
+                    value: "4",
+                    label: "序号4"
+                },
+                {
+                    value: "5",
+                    label: "序号5"
+                },
+                {
+                    value: "6",
+                    label: "序号6"
+                },
+                {
+                    value: "7",
+                    label: "序号7"
+                },
+                {
+                    value: "8",
+                    label: "序号8"
+                },
+                {
+                    value: "9",
+                    label: "序号9"
+                },
+                {
+                    value: "10",
+                    label: "序号10"
+                },
+                {
+                    value: "11",
+                    label: "序号11"
+                },
+                {
+                    value: "12",
+                    label: "序号12"
+                },
+                {
+                    value: "13",
+                    label: "序号13"
+                },
+                {
+                    value: "14",
+                    label: "序号14"
+                }
+            ],
+            xuhao: "1",
+            xuhaosrc: ""
         };
     },
     methods: {
@@ -145,9 +223,30 @@ export default {
                     type: "warning"
                 });
             }
+        },
+        async GetXuhaoSrc() {
+            let params = {
+                xuhao: this.xuhao
+            };
+            let res = await window.axios.post(
+                "/api/ManageSystem/GetXuhaoSrc",
+                params
+            );
+            console.log("res:", res);
+            if (res.code == 200) {
+                this.xuhaosrc = res.data[0];
+            } else {
+                this.$message({
+                    message: res.msg,
+                    type: "warning"
+                });
+            }
         }
     },
-    created() {}
+    created() {
+        this.GetXuhaoSrc();
+        setInterval(this.GetXuhaoSrc, 10 * 1000);
+    }
 };
 </script>
 <style>
