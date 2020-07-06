@@ -36,6 +36,7 @@
                     v-for="(item, index) in modifyData"
                     :key="index"
                     style="margin:10px;color:#409EFF;cursor:pointer;"
+                    @click="DownloadJson(item)"
                 >{{item.split("/")[item.split("/").length-1]}}</p>
             </el-col>
         </el-row>
