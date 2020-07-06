@@ -18,11 +18,16 @@ const routes = [
     path: '/front',
     name: 'front',
     component: () => import('../views/Front.vue')
+  },
+  {
+    path: '/back',
+    name: 'back',
+    component: () => import('../views/Back.vue')
   }
 ]
 
 const router = new VueRouter({
-  mode: 'history',
+  // mode: 'history',
   base: process.env.BASE_URL,
   routes
 })

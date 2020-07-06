@@ -1,52 +1,100 @@
 <template>
-  <div>
-    <el-upload
-      class="upload-demo"
-      ref="upload"
-      action="/api/ManageSystem/Upload"
-      :on-preview="handlePreview"
-      :on-remove="handleRemove"
-      :file-list="fileList"
-      :auto-upload="false"
-    >
-      <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-      <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
-    </el-upload>
-  </div>
+    <div>
+        <el-row>
+            <el-col :span="8">
+                <p style="font-size:16px;margin:20px 0;">文件上传</p>
+                <el-upload
+                    class="upload-demo"
+                    ref="upload"
+                    action="/api/ManageSystem/Upload"
+                    :on-preview="handlePreview"
+                    :on-remove="handleRemove"
+                    :file-list="fileList"
+                    :auto-upload="false"
+                >
+                    <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+                    <el-button
+                        style="margin-left: 10px;"
+                        size="small"
+                        type="success"
+                        @click="submitUpload"
+                    >上传到服务器</el-button>
+                </el-upload>
+            </el-col>
+            <el-col :span="8">
+                <p style="font-size:16px;margin:20px 0;">初始识别数据</p>
+                <p
+                    v-for="(item, index) in initData"
+                    :key="index"
+                    style="margin:10px;color:#409EFF;cursor:pointer;"
+                    @click="DownloadJson(item)"
+                >{{item.split("/")[item.split("/").length-1]}}</p>
+            </el-col>
+            <el-col :span="8">
+                <p style="font-size:16px;margin:20px 0;">精确识别数据</p>
+                <p
+                    v-for="(item, index) in modifyData"
+                    :key="index"
+                    style="margin:10px;color:#409EFF;cursor:pointer;"
+                >{{item.split("/")[item.split("/").length-1]}}</p>
+            </el-col>
+        </el-row>
+    </div>
 </template>
 
 <script>
 export default {
-  name: "front",
-  components: {},
-  data() {
-    return {
-      fileList: []
-    };
-  },
-  methods: {
-    submitUpload() {
-      this.$refs.upload.submit();
+    name: "front",
+    components: {},
+    data() {
+        return {
+            fileList: [],
+            initData: [],
+            modifyData: []
+        };
     },
-    handleRemove(file, fileList) {
-      console.log(file, fileList);
+    methods: {
+        submitUpload() {
+            this.$refs.upload.submit();
+        },
+        handleRemove(file, fileList) {
+            console.log(file, fileList);
+        },
+        handlePreview(file) {
+            console.log(file);
+        },
+        async getInitData() {
+            let params = {};
+            let res = await window.axios.post(
+                "/api/ManageSystem/GetInitData",
+                params
+            );
+            this.initData = res.data;
+        },
+        async getModifyData() {
+            let params = {};
+            let res = await window.axios.post(
+                "/api/ManageSystem/GetModifyData",
+                params
+            );
+            this.modifyData = res.data;
+        },
+        DownloadJson(url) {
+            var a = document.createElement("a");
+            a.href = url;
+            a.target = "_blank";
+            a.download = url.split("/")[url.split("/").length - 1];
+            document.body.appendChild(a);
+            a.click();
+        }
     },
-    handlePreview(file) {
-      console.log(file);
-    },
-    async getInitData() {
-      let params = {};
-      let res = await window.axios.post(
-        "/api/ManageSystem/GetInitData",
-        params
-      );
-      console.log("res:", res);
+    created() {
+        this.getInitData();
+        this.getModifyData();
+        setInterval(this.getInitData, 10 * 1000);
+        setInterval(this.getModifyData, 10 * 1000);
     }
-  },
-  created() {
-    setInterval(this.getInitData, 5000);
-  }
 };
 </script>
-<style lang="scss">
+<style>
 </style>
