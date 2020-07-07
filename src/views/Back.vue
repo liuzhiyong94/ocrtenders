@@ -173,8 +173,7 @@ export default {
                 }
             ],
             xuhao: "1",
-            xuhaosrc: "",
-            Timer: null
+            xuhaosrc: ""
         };
     },
     methods: {
@@ -236,9 +235,6 @@ export default {
             console.log("res:", res);
             if (res.code == 200) {
                 this.xuhaosrc = res.data[0];
-                if(this.xuhaosrc){
-                    clearInterval(this.Timer);
-                }
             } else {
                 this.$message({
                     message: res.msg,
@@ -249,7 +245,7 @@ export default {
     },
     created() {
         this.GetXuhaoSrc();
-        this.Timer = setInterval(this.GetXuhaoSrc, 10 * 1000);
+        setInterval(this.GetXuhaoSrc, 10 * 1000);
     }
 };
 </script>
