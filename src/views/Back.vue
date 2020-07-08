@@ -77,7 +77,7 @@
                         :value="item.value"
                     ></el-option>
                 </el-select>
-                <!-- <el-button style="margin-left: 10px;" size="small" type="success" @click="GetXuhaoSrc">获取图片</el-button> -->
+                <el-button style="margin-left: 10px;" size="small" type="success" @click="GetXuhaoSrc">获取图片</el-button>
                 <div>
                     <el-image :src="xuhaosrc" v-if="xuhaosrc"></el-image>
                 </div>
@@ -244,8 +244,7 @@ export default {
         }
     },
     created() {
-        this.GetXuhaoSrc();
-        setInterval(this.GetXuhaoSrc, 10 * 1000);
+        
     }
 };
 </script>
